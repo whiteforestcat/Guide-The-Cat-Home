@@ -47,3 +47,8 @@ class Player {
     }
   }
 }
+
+// end of player creation
+
+const player = new Player();
+player.draw();
