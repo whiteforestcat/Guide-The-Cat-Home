@@ -37,6 +37,7 @@ class Player {
     this.position.x += this.velocity.x;
 
     if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+      // include velocity-y so that player will stay one position away from bottom (in one frame per second)
       // gravity only exist while player is on canvas
       this.velocity.y += gravity; // increase velocity-y here instead of position-y because gravity is acceleration
     } else {
@@ -63,10 +64,9 @@ class Platform {
 }
 
 const player = new Player();
-player.draw();  // drawing player onto canvas
+player.draw(); // drawing player onto canvas
 
 const platform = new Platform();
-
 
 // creating player
 
@@ -75,13 +75,25 @@ function animate() {
   // meaning the animiate function will repeat its contents over and over again
   c.clearRect(0, 0, canvas.width, canvas.height); // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
   player.update();
-  platform.draw();    // drawing platform onto canvas
+  platform.draw(); // drawing platform onto canvas
+
+  if (
+    // creating player-platform collision detection
+    player.position.y + player.height <= platform.position.y &&
+    player.position.y + player.height + player.velocity.y >=
+      platform.position.y && // IMPORTANT note: like in gravity need to include player.velocity.y
+    player.position.x + player.width >= platform.position.x &&
+    player.position.x <= platform.position.x + platform.width
+  ) {
+    // remember that top of canvas is lower than bottom of canvas
+    player.velocity.y = 0;
+  }
 }
 
 animate();
 
 // create animation
-// create gravity in update()
+// create gravity in update() in Player class
 
 // function keyboardDown(e) {
 //   console.log(e)  // can log this in terminal to check the keycode of each character key
