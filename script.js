@@ -17,15 +17,37 @@ class Player {
     };
     this.width = 30;
     this.height = 30;
+    this.velocity = {
+      x: 0,
+      y: 1,
+    };
   }
 
   draw() {
-    c.fillStyle = "red";    // making player red
+    c.fillStyle = "red"; // making player red
     c.fillRect(this.position.x, this.position.y, this.width, this.height); // creates rectangle, requires xy positions, width and height
+  }
+
+  update() {
+    // to continuously update the player's properties and values
+    // this.draw(); // update the values first then draw the player onto canvas
+    this.position.y += this.velocity.y; // when update() is called, player will move down along y axis by velocity-y value
+    this.draw(); // but if have loop to continuously repeat update(), then it wont matter
   }
 }
 
 const player = new Player();
-player.draw();
+player.draw(); // drawing player onto canvas
 
 // creating player
+
+function animate() {
+  requestAnimationFrame(animate); // arguement is the function which you want to repeat, here want to repeat the animate function
+  // meaning the animiate function will repeat its contents over and over again
+  c.clearRect(0,0, canvas.width, canvas.height) // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
+  player.update()
+}
+
+animate();
+
+// create animation
