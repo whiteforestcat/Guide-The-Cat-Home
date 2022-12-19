@@ -9,6 +9,8 @@ canvas.height = window.innerHeight; // to make canvas take the full height of th
 
 console.log(c);
 
+const gravity = 0.5; // to introduce velocity ie y-acceleration
+
 // to create player
 
 class Player {
@@ -47,6 +49,7 @@ class Player {
     }
   }
 }
+
 // end of player creation
 
 class Platform {
@@ -89,7 +92,7 @@ function animate() {
   // .clearRect has 4 arguments, x and y coordinates (if 0 means top left corner), how much width and height you want to clear from x,y
   player.update(); // to make player to keep moving
   platform.draw();
-
+  
   if (keys.rightKey.pressed) {
     // true or false will depend on addEventListener
     player.velocity.x = 5; // speed increases 5 units/timeframe to the right
