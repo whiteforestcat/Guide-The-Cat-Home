@@ -52,3 +52,90 @@ class Player {
 
 const player = new Player();
 player.draw();
+
+const keys = {
+    // initial state of right and left keys ie "d" and "a" which are not pressed by default
+    rightKey: {
+      pressed: false,
+    },
+    leftKey: {
+      pressed: false,
+    },
+  };
+  
+  // player.update(); // player will move down 1 unit upon refresh
+  // to create a NON-STOP LOOP to mimic animation instead of one time action which will keep reiterating itself like the void loop in arduino
+  function animate() {
+    requestAnimationFrame(animate); // this will cause the content within animate to repeat over and over again non-stop
+    // console.log("go")                   // test printing "go" on console
+    c.clearRect(0, 0, canvas.width, canvas.height); // without this, original player object shape will not maintain, it will just keep expanding downwards
+    // .clearRect has 4 arguments, x and y coordinates (if 0 means top left corner), how much width and height you want to clear from x,y
+    player.update(); // to make player to keep moving
+  
+    if (keys.rightKey.pressed) {
+      // true or false will depend on addEventListener
+      player.velocity.x = 5; // speed increases 5 units/timeframe to the right
+    } else {
+      player.velocity.x = 0;
+    }
+    if (keys.leftKey.pressed) {
+      // true or false will depend on addEventListener
+      player.velocity.x = -5; // speed increases 5 units/timeframe to the left
+    }
+  }
+  
+  animate();
+  
+  // add clicks using addEventListeners to move the player using keyboard
+  
+  // const keyboard = (e) => {
+  //   // console.log("go");       // test to see console will print "go" when you press down any key on keyboard
+  //   console.log(e);             // press a key and check keycode under console to check what is the coresponding value to its key on keyboard
+  // };
+  
+  // this occurs when you press down a key
+  const keyboardDown = ({ keyCode }) => {
+    switch (keyCode) {
+      case 65: // corresponds to A
+        console.log("left");
+        keys.leftKey.pressed = true;
+        break;
+      case 83: // corresponds to S
+        console.log("down");
+        break;
+      case 68: // corresponds to D
+        console.log("right");
+        keys.rightKey.pressed = true;
+        //   player.velocity.x = 1; // this is velocity not position so no need to += 1 as this will introducec acceleration along x-axis
+        break;
+      case 87: // corresponds to W
+        console.log("up");
+        player.velocity.y -= 20; // minus to move up
+        break;
+    }
+  };
+  
+  window.addEventListener("keydown", keyboardDown);
+  
+  // this occurs when you lift up a key
+  const keyboardUp = ({ keyCode }) => {
+    switch (keyCode) {
+      case 65: // corresponds to A
+        keys.leftKey.pressed = false;
+        console.log("left");
+        break;
+      case 83: // corresponds to S
+        console.log("down");
+        break;
+      case 68: // corresponds to D
+        keys.rightKey.pressed = false;
+        //   player.velocity.x = 0; // remember this is velocity, not position
+        break;
+      case 87: // corresponds to W
+        console.log("up");
+        player.velocity.y -= 20; // minus to move up
+        break;
+    }
+  };
+  
+  window.addEventListener("keyup", keyboardUp);
