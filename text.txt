@@ -17,3 +17,6 @@ search how to make screen move
 10. death pits
 11. level creation
 12. fine-tuning
+
+<link href="style.css" rel="stylesheet" />
+<script src="script.js" charset="utf-8"></script>
