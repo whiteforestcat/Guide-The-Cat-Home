@@ -6,7 +6,6 @@ canvas.width = window.innerWidth; // making canvas to take the full height and w
 canvas.height = window.innerHeight;
 const gravity = 0.5;
 
-
 // creating canvas for 2d platform
 
 class Player {
@@ -33,14 +32,17 @@ class Player {
   update() {
     // to continuously update the player's properties and values
     this.draw(); // draw the player onto canvas
+    // the below 2 lines links position with velocity causing position to be affected by velocity
     this.position.y += this.velocity.y; // when update() is called, player will move down along y axis by velocity-y value
-    
-    if (this.position.y + this.height + this.velocity.y <= canvas.height) {  // gravity only exist while player is on canvas
-        this.velocity.y += gravity  // increase velocity-y here instead of position-y because gravity is acceleration
-    } else {    // stops velocity-y once player is at bottom of canvas
-        this.velocity.y = 0;
+    this.position.x += this.velocity.x;
+
+    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+      // gravity only exist while player is on canvas
+      this.velocity.y += gravity; // increase velocity-y here instead of position-y because gravity is acceleration
+    } else {
+      // stops velocity-y once player is at bottom of canvas
+      this.velocity.y = 0;
     }
-    
   }
 }
 
@@ -52,11 +54,61 @@ player.draw(); // drawing player onto canvas
 function animate() {
   requestAnimationFrame(animate); // arguement is the function which you want to repeat, here want to repeat the animate function
   // meaning the animiate function will repeat its contents over and over again
-  c.clearRect(0,0, canvas.width, canvas.height) // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
-  player.update()
+  c.clearRect(0, 0, canvas.width, canvas.height); // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
+  player.update();
 }
 
 animate();
 
 // create animation
 // create gravity in update()
+
+// function keyboardDown(e) {
+//   console.log(e)  // can log this in terminal to check the keycode of each character key
+// }
+
+function keyboardDown({ keyCode }) {
+  switch (keyCode) {
+    case 65: // refers to A
+      console.log("left");
+      player.velocity.x = -5;
+      break;
+    case 83: // refers to S
+      console.log("down");
+      break;
+    case 68: // refers to D
+      console.log("right");
+      player.velocity.x = 5;
+      break;
+    case 87: // refers to W
+      console.log("up");
+      player.velocity.y = 10;  // minus to move up
+      break;
+  }
+}
+
+window.addEventListener("keydown", keyboardDown);
+
+function keyboardUp({ keyCode }) {
+    switch (keyCode) {
+      case 65: // refers to A
+        console.log("left");
+        player.velocity.x = 0; 
+        break;
+      case 83: // refers to S
+        console.log("down");
+        break;
+      case 68: // refers to D
+        console.log("right");
+        player.velocity.x = 0;  // when "d" key is lifted, player will stop moving to the right
+        break;
+      case 87: // refers to W
+        console.log("up");
+        player.velocity.y = 0;  // although velocity-y = 0, if it is mid-air, the gravity if-else code will activate and give it a value causing player to go down
+        break;
+    }
+  }
+  
+  window.addEventListener("keyup", keyboardUp);
+
+  // player movements when keydown and keyup
