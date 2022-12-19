@@ -5,6 +5,7 @@ const c = canvas.getContext("2d"); // to create a 2d canvas
 canvas.width = window.innerWidth; // making canvas to take the full height and width of the window
 canvas.height = window.innerHeight;
 const gravity = 0.5;
+let scrollDistance = 0; // to measure how much the player has travelled
 
 // creating canvas for 2d platform
 
@@ -112,10 +113,12 @@ function keyboardDown({ keyCode }) {
       console.log("left");
       if (player.position.x >= 100) {
         player.velocity.x = -5;
+        scrollDistance -= 5;
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x += 5;
+          player.velocity.x = -5;
           // moving the platform RIGHT instead of the player by 5 when you keep moving left
           // this is to scroll the platform to the left
         });
@@ -128,10 +131,12 @@ function keyboardDown({ keyCode }) {
       console.log("right");
       if (player.position.x <= 400) {
         player.velocity.x = 5;
+        scrollDistance += 5;
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= 5;
+          scrollDistance += 5;
           // 5 because you want it to move LEFT at the same rate as the player.velocity.x
           // scrolls platform to the right
         });
@@ -142,7 +147,15 @@ function keyboardDown({ keyCode }) {
       player.velocity.y = -10; // minus to move up
       break;
   }
+
+  // Winning Scenario
+  if (scrollDistance >= 2000) {
+    alert("Congrats! The Cat has returned home!")
+  }
+  console.log(scrollDistance);
 }
+
+
 
 window.addEventListener("keydown", keyboardDown);
 
