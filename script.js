@@ -103,14 +103,26 @@ function keyboardDown({ keyCode }) {
   switch (keyCode) {
     case 65: // refers to A
       console.log("left");
-      player.velocity.x = -5;
+      if (player.position.x >= 100) {
+        player.velocity.x = -5;
+      } else {
+        player.velocity.x = 0;
+        platform.position.x += 5;   // moving the platform RIGHT instead of the player by 5 when you keep moving left
+        // this is to scroll the platform to the left
+      }
       break;
     case 83: // refers to S
       console.log("down");
       break;
     case 68: // refers to D
       console.log("right");
-      player.velocity.x = 5;
+      if (player.position.x <= 400) {
+        player.velocity.x = 5;
+      } else {
+        player.velocity.x = 0;
+        platform.position.x -= 5;   // 5 because you want it to move LEFT at the same rate as the player.velocity.x
+        // scrolls platform to the right
+      }
       break;
     case 87: // refers to W
       console.log("up");
