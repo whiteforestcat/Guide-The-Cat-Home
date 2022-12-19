@@ -2,8 +2,10 @@ const canvas = document.querySelector("canvas");
 
 const c = canvas.getContext("2d"); // to create a 2d canvas
 
-canvas.width = window.innerWidth; // making canvas to take he full height and width of the window
+canvas.width = window.innerWidth; // making canvas to take the full height and width of the window
 canvas.height = window.innerHeight;
+const gravity = 0.5;
+
 
 // creating canvas for 2d platform
 
@@ -19,7 +21,7 @@ class Player {
     this.height = 30;
     this.velocity = {
       x: 0,
-      y: 1,
+      y: 0,
     };
   }
 
@@ -30,9 +32,15 @@ class Player {
 
   update() {
     // to continuously update the player's properties and values
-    // this.draw(); // update the values first then draw the player onto canvas
+    this.draw(); // draw the player onto canvas
     this.position.y += this.velocity.y; // when update() is called, player will move down along y axis by velocity-y value
-    this.draw(); // but if have loop to continuously repeat update(), then it wont matter
+    
+    if (this.position.y + this.height + this.velocity.y <= canvas.height) {  // gravity only exist while player is on canvas
+        this.velocity.y += gravity  // increase velocity-y here instead of position-y because gravity is acceleration
+    } else {    // stops velocity-y once player is at bottom of canvas
+        this.velocity.y = 0;
+    }
+    
   }
 }
 
@@ -51,3 +59,4 @@ function animate() {
 animate();
 
 // create animation
+// create gravity in update()
