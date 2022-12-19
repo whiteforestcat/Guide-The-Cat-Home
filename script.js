@@ -48,10 +48,12 @@ class Player {
 }
 
 class Platform {
-  constructor() {
+  constructor(x, y) {
     this.position = {
-      x: 200,
-      y: 100,
+      //   x: 200,    // dont use given values to create multiple instances of class, otherwise all the platforms will just overlap
+      //   y: 100,
+      x: x, // this is like this.x = x as learned previously but no need to write this.x as here it is already this.position.x
+      y: y,
     };
     this.width = 200;
     this.height = 20;
@@ -66,7 +68,9 @@ class Platform {
 const player = new Player();
 player.draw(); // drawing player onto canvas
 
-const platform = new Platform();
+// const platform = new Platform(); // creating one platform
+const platforms = [new Platform(200, 100), new Platform(500, 200)]; // to create multiple instances of platform using array, now need to do forEach to convert each platform into platforms
+// but if platform.position.x and .y are given values during class creation, then theese 2 plaform instances will overlap
 
 // creating player
 
@@ -75,19 +79,22 @@ function animate() {
   // meaning the animiate function will repeat its contents over and over again
   c.clearRect(0, 0, canvas.width, canvas.height); // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
   player.update();
-  platform.draw(); // drawing platform onto canvas
+  platforms.forEach((platform) => platform.draw());
+  //   platform.draw(); // drawing platform onto canvas
 
-  if (
-    // creating player-platform collision detection
-    player.position.y + player.height <= platform.position.y &&
-    player.position.y + player.height + player.velocity.y >=
-      platform.position.y && // IMPORTANT note: like in gravity need to include player.velocity.y
-    player.position.x + player.width >= platform.position.x &&
-    player.position.x <= platform.position.x + platform.width
-  ) {
-    // remember that top of canvas is lower than bottom of canvas
-    player.velocity.y = 0;
-  }
+  platforms.forEach((platform) => {
+    if (
+      // creating player-platform collision detection
+      player.position.y + player.height <= platform.position.y &&
+      player.position.y + player.height + player.velocity.y >=
+        platform.position.y && // IMPORTANT note: like in gravity need to include player.velocity.y
+      player.position.x + player.width >= platform.position.x &&
+      player.position.x <= platform.position.x + platform.width
+    ) {
+      // remember that top of canvas is lower than bottom of canvas
+      player.velocity.y = 0;
+    }
+  });
 }
 
 animate();
@@ -107,8 +114,11 @@ function keyboardDown({ keyCode }) {
         player.velocity.x = -5;
       } else {
         player.velocity.x = 0;
-        platform.position.x += 5;   // moving the platform RIGHT instead of the player by 5 when you keep moving left
-        // this is to scroll the platform to the left
+        platforms.forEach((platform) => {
+          platform.position.x += 5;
+          // moving the platform RIGHT instead of the player by 5 when you keep moving left
+          // this is to scroll the platform to the left
+        });
       }
       break;
     case 83: // refers to S
@@ -120,8 +130,11 @@ function keyboardDown({ keyCode }) {
         player.velocity.x = 5;
       } else {
         player.velocity.x = 0;
-        platform.position.x -= 5;   // 5 because you want it to move LEFT at the same rate as the player.velocity.x
-        // scrolls platform to the right
+        platforms.forEach((platform) => {
+          platform.position.x -= 5;
+          // 5 because you want it to move LEFT at the same rate as the player.velocity.x
+          // scrolls platform to the right
+        });
       }
       break;
     case 87: // refers to W
