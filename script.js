@@ -149,6 +149,16 @@ function animate() {
       player.velocity.y = 0;
     }
   });
+
+  enemies.forEach((enemy) => {
+    if (
+      // creating player-enemy collision detection
+      player.position.y + player.height - 10 >= enemy.position.y && // somehow need -10 to ensure player is in contact with enemy from the top
+      player.position.x + player.width - 4 >= enemy.position.x &&
+      player.position.x + 10 <= enemy.position.x + enemy.width
+    )
+      alert("Game Over! You are dead");
+  });
 }
 
 animate();
