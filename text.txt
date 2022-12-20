@@ -20,3 +20,11 @@ search how to make screen move
 
 <link href="style.css" rel="stylesheet" />
 <script src="script.js" charset="utf-8"></script>
+
+improvements:
+create wall class?
+
+problems to resolve:
+1. diagonal movements do not increase scrollDistance and will not scroll screen
+2. when going back, player will exit screen while scroll screen backwards
+3. add background image

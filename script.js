@@ -1,3 +1,6 @@
+const platformImage = document.getElementById("platform-image");
+const catImage = document.getElementById("cat-image");
+
 const canvas = document.querySelector("canvas");
 
 const c = canvas.getContext("2d"); // to create a 2d canvas
@@ -6,28 +9,31 @@ canvas.width = window.innerWidth; // making canvas to take the full height and w
 canvas.height = window.innerHeight;
 const gravity = 0.5;
 let scrollDistance = 0; // to measure how much the player has travelled
+const home = 20000; // this is the end goal
 
 // creating canvas for 2d platform
 
 class Player {
-  constructor() {
+  constructor(image) {
     // creating properties for Player class
     this.position = {
       // xy position on canvas with 0,0 being at top left corner
       x: 100,
       y: 100,
     };
-    this.width = 30;
-    this.height = 30;
+    this.width = 50;
+    this.height = 50;
     this.velocity = {
       x: 0,
       y: 0,
     };
+    this.image = image;
   }
 
   draw() {
-    c.fillStyle = "red"; // making player red
-    c.fillRect(this.position.x, this.position.y, this.width, this.height); // creates rectangle, requires xy coordinates for positioning on the canvas, width and height
+    // c.fillStyle = "yellow"; // making player red
+    // c.fillRect(this.position.x, this.position.y, this.width, this.height); // creates rectangle, requires xy coordinates for positioning on the canvas, width and height
+    c.drawImage(catImage, this.position.x, this.position.y, this.width, this.height);
   }
 
   update() {
@@ -49,7 +55,7 @@ class Player {
 }
 
 class Platform {
-  constructor(x, y) {
+  constructor(x, y, image) {
     this.position = {
       //   x: 200,    // dont use given values to create multiple instances of class, otherwise all the platforms will just overlap
       //   y: 100,
@@ -58,11 +64,19 @@ class Platform {
     };
     this.width = 200;
     this.height = 20;
+    this.image = image;
   }
 
   draw() {
-    c.fillStyle = "blue";
-    c.fillRect(this.position.x, this.position.y, this.width, this.height); // remember that fillRect draws out the instance onto the canvas (default color is black)
+    // c.fillStyle = "blue";
+    // c.fillRect(this.position.x, this.position.y, this.width, this.height); // remember that fillRect draws out the instance onto the canvas (default color is black)
+    c.drawImage(
+      platformImage,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
 }
 
@@ -70,8 +84,15 @@ const player = new Player();
 player.draw(); // drawing player onto canvas
 
 // const platform = new Platform(); // creating one platform
-const platforms = [new Platform(200, 100), new Platform(500, 200)]; // to create multiple instances of platform using array, now need to do forEach to convert each platform into platforms
-// but if platform.position.x and .y are given values during class creation, then theese 2 plaform instances will overlap
+const platforms = [
+  // to create multiple instances of platform using array, now need to do forEach to convert each platform into platforms
+  // but if platform.position.x and .y are given values during class creation, then theese 2 plaform instances will overlap
+  new Platform(400, 400),
+  new Platform(1000, 400),
+  new Platform(1200, 300),
+  // 2 enemies here
+  new Platform(2000, 400),
+];
 
 // creating player
 
@@ -79,9 +100,10 @@ function animate() {
   requestAnimationFrame(animate); // arguement is the function which you want to repeat, here want to repeat the animate function
   // meaning the animiate function will repeat its contents over and over again
   c.clearRect(0, 0, canvas.width, canvas.height); // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
-  player.update();
+
   platforms.forEach((platform) => platform.draw());
   //   platform.draw(); // drawing platform onto canvas
+  player.update(); // player.draw() below platform.draw() so that on live server, player wont be behing platform when they overlap
 
   platforms.forEach((platform) => {
     if (
@@ -112,13 +134,13 @@ function keyboardDown({ keyCode }) {
     case 65: // refers to A
       console.log("left");
       if (player.position.x >= 100) {
-        player.velocity.x = -5;
-        scrollDistance -= 5;
+        player.velocity.x = -7;
+        scrollDistance -= 7;
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
-          platform.position.x += 5;
-          player.velocity.x = -5;
+          platform.position.x += 7;
+          player.velocity.x = -7;
           // moving the platform RIGHT instead of the player by 5 when you keep moving left
           // this is to scroll the platform to the left
         });
@@ -130,13 +152,13 @@ function keyboardDown({ keyCode }) {
     case 68: // refers to D
       console.log("right");
       if (player.position.x <= 400) {
-        player.velocity.x = 5;
-        scrollDistance += 5;
+        player.velocity.x = 7;
+        scrollDistance += 7;
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
-          platform.position.x -= 5;
-          scrollDistance += 5;
+          platform.position.x -= 7;
+          scrollDistance += 7;
           // 5 because you want it to move LEFT at the same rate as the player.velocity.x
           // scrolls platform to the right
         });
@@ -149,13 +171,11 @@ function keyboardDown({ keyCode }) {
   }
 
   // Winning Scenario
-  if (scrollDistance >= 2000) {
-    alert("Congrats! The Cat has returned home!")
+  if (scrollDistance >= home) {
+    alert("Congrats! The Cat has returned home!");
   }
   console.log(scrollDistance);
 }
-
-
 
 window.addEventListener("keydown", keyboardDown);
 
