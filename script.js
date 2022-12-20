@@ -1,5 +1,6 @@
 const platformImage = document.getElementById("platform-image");
 const catImage = document.getElementById("cat-image");
+const wolfImage = document.getElementById("wolf-image");
 
 const canvas = document.querySelector("canvas");
 
@@ -33,7 +34,13 @@ class Player {
   draw() {
     // c.fillStyle = "yellow"; // making player red
     // c.fillRect(this.position.x, this.position.y, this.width, this.height); // creates rectangle, requires xy coordinates for positioning on the canvas, width and height
-    c.drawImage(catImage, this.position.x, this.position.y, this.width, this.height);
+    c.drawImage(
+      catImage,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
 
   update() {
@@ -80,8 +87,31 @@ class Platform {
   }
 }
 
+class Enemy {
+  constructor(x, image) {
+    this.position = {
+      x: x,
+      y: canvas.height - 50,
+    };
+    this.width = 50;
+    this.height = 46;
+    this.image = image;
+  }
+
+  draw() {
+    c.drawImage(
+      wolfImage,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
+}
+
 const player = new Player();
 player.draw(); // drawing player onto canvas
+// creating player
 
 // const platform = new Platform(); // creating one platform
 const platforms = [
@@ -94,7 +124,7 @@ const platforms = [
   new Platform(2000, 400),
 ];
 
-// creating player
+const enemies = [new Enemy(500), new Enemy(1300)];
 
 function animate() {
   requestAnimationFrame(animate); // arguement is the function which you want to repeat, here want to repeat the animate function
@@ -104,6 +134,7 @@ function animate() {
   platforms.forEach((platform) => platform.draw());
   //   platform.draw(); // drawing platform onto canvas
   player.update(); // player.draw() below platform.draw() so that on live server, player wont be behing platform when they overlap
+  enemies.forEach((enemy) => enemy.draw());
 
   platforms.forEach((platform) => {
     if (
@@ -144,6 +175,10 @@ function keyboardDown({ keyCode }) {
           // moving the platform RIGHT instead of the player by 5 when you keep moving left
           // this is to scroll the platform to the left
         });
+        enemies.forEach((enemy) => {
+          enemy.position.x += 7;
+          // scrolls enemy to the right
+        });
       }
       break;
     case 83: // refers to S
@@ -161,6 +196,10 @@ function keyboardDown({ keyCode }) {
           scrollDistance += 7;
           // 5 because you want it to move LEFT at the same rate as the player.velocity.x
           // scrolls platform to the right
+        });
+        enemies.forEach((enemy) => {
+          enemy.position.x -= 7;
+          // scrolls enemy to the right
         });
       }
       break;
