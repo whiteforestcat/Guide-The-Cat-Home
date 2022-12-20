@@ -181,7 +181,7 @@ function keyboardDown({ keyCode }) {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x += 7;
-          player.velocity.x = -7;
+          scrollDistance = -7;
           // moving the platform RIGHT instead of the player by 5 when you keep moving left
           // this is to scroll the platform to the left
         });
