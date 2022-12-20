@@ -3,5 +3,7 @@ body {
 }
 
 canvas {
-    background-color: black;
+    background: url(/images/clouds.png);
+    /* background-color: black; */
+    background-size: cover;
 }

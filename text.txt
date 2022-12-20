@@ -25,6 +25,6 @@ improvements:
 create wall class?
 
 problems to resolve:
-1. diagonal movements do not increase scrollDistance and will not scroll screen
-2. when going back, player will exit screen while scroll screen backwards
-3. add background image
+1. diagonal movements do not increase scrollDistance and will not scroll screen -- SKIP
+2. when going back, player will exit screen while scroll screen backwards -- DONE
+3. add background image -- DONE

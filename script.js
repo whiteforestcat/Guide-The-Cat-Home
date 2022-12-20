@@ -1,3 +1,5 @@
+// Before you start look at keydown "D" and adjust value according to screen size
+
 const platformImage = document.getElementById("platform-image");
 const catImage = document.getElementById("cat-image");
 const wolfImage = document.getElementById("wolf-image");
@@ -91,10 +93,10 @@ class Enemy {
   constructor(x, image) {
     this.position = {
       x: x,
-      y: canvas.height - 50,
+      y: canvas.height - 110,
     };
-    this.width = 50;
-    this.height = 46;
+    this.width = 200;
+    this.height = 140;
     this.image = image;
   }
 
@@ -153,11 +155,15 @@ function animate() {
   enemies.forEach((enemy) => {
     if (
       // creating player-enemy collision detection
-      player.position.y + player.height - 10 >= enemy.position.y && // somehow need -10 to ensure player is in contact with enemy from the top
-      player.position.x + player.width - 4 >= enemy.position.x &&
-      player.position.x + 10 <= enemy.position.x + enemy.width
-    )
+      player.position.y + player.height - 50 >= enemy.position.y && // somehow need -10 to ensure player is in contact with enemy from the top
+      player.position.x + player.width - 100 >= enemy.position.x && // ninja cat minus 4
+      player.position.x + 50 <= enemy.position.x + enemy.width
+    ) {
       alert("Game Over! You are dead");
+    }
+
+
+
   });
 }
 
@@ -196,7 +202,7 @@ function keyboardDown({ keyCode }) {
       break;
     case 68: // refers to D
       console.log("right");
-      if (player.position.x <= 400) {
+      if (player.position.x <= 1000) {   // CHANGE THIS ACCORDING TO SCREEN SIZE !!!!!!!
         player.velocity.x = 7;
         scrollDistance += 7;
       } else {
