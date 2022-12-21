@@ -28,3 +28,9 @@ problems to resolve:
 1. diagonal movements do not increase scrollDistance and will not scroll screen -- SKIP
 2. when going back, player will exit screen while scroll screen backwards -- DONE
 3. add background image -- DONE
+
+
+add second invisible player hidden in the background (initialised at bottom right corner) which will always scroll the screen
+- meaning separate the scrolling from the player movement into 2 different players
+
+readup on setTimeout() and setInterval() functions -- IMPORTANT

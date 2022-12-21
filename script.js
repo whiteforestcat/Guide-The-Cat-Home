@@ -3,6 +3,7 @@
 const platformImage = document.getElementById("platform-image");
 const catImage = document.getElementById("cat-image");
 const wolfImage = document.getElementById("wolf-image");
+const homeImage = document.getElementById("home-image");
 
 const canvas = document.querySelector("canvas");
 
@@ -12,12 +13,12 @@ canvas.width = window.innerWidth; // making canvas to take the full height and w
 canvas.height = window.innerHeight;
 const gravity = 0.5;
 let scrollDistance = 0; // to measure how much the player has travelled
-const home = 20000; // this is the end goal
+const homeDistance = 2200; // this is the end goal
 
 // creating canvas for 2d platform
 
 class Player {
-  constructor(image) {
+  constructor() {
     // creating properties for Player class
     this.position = {
       // xy position on canvas with 0,0 being at top left corner
@@ -30,7 +31,6 @@ class Player {
       x: 0,
       y: 0,
     };
-    this.image = image;
   }
 
   draw() {
@@ -64,7 +64,7 @@ class Player {
 }
 
 class Platform {
-  constructor(x, y, image) {
+  constructor(x, y) {
     this.position = {
       //   x: 200,    // dont use given values to create multiple instances of class, otherwise all the platforms will just overlap
       //   y: 100,
@@ -73,7 +73,6 @@ class Platform {
     };
     this.width = 200;
     this.height = 20;
-    this.image = image;
   }
 
   draw() {
@@ -90,14 +89,13 @@ class Platform {
 }
 
 class Enemy {
-  constructor(x, image) {
+  constructor(x) {
     this.position = {
       x: x,
       y: canvas.height - 110,
     };
     this.width = 200;
     this.height = 140;
-    this.image = image;
   }
 
   draw() {
@@ -111,32 +109,55 @@ class Enemy {
   }
 }
 
+class Home {
+  constructor(x) {
+    this.position = {
+      x: x,
+      y: canvas.height - 220,
+    };
+    this.width = 400; //200
+    this.height = 251; //140
+  }
+
+  draw() {
+    c.drawImage(
+      homeImage,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
+}
+
 const player = new Player();
-player.draw(); // drawing player onto canvas
 // creating player
 
 // const platform = new Platform(); // creating one platform
 const platforms = [
   // to create multiple instances of platform using array, now need to do forEach to convert each platform into platforms
   // but if platform.position.x and .y are given values during class creation, then theese 2 plaform instances will overlap
-  new Platform(400, 400),
-  new Platform(1000, 400),
-  new Platform(1200, 300),
-  // 2 enemies here
-  new Platform(2000, 400),
+  new Platform(400, 450),
+  new Platform(1000, 450),
+  new Platform(1180, 350),
+  new Platform(2000, 450),
+  new Platform(2200, 350),
 ];
 
-const enemies = [new Enemy(500), new Enemy(1300)];
+// creating enemies
+const enemies = [new Enemy(500), new Enemy(1100), new Enemy(1800)];
+
+// creating house
+const home = new Home(2500); // 3000
 
 function animate() {
   requestAnimationFrame(animate); // arguement is the function which you want to repeat, here want to repeat the animate function
   // meaning the animiate function will repeat its contents over and over again
   c.clearRect(0, 0, canvas.width, canvas.height); // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
-
-  platforms.forEach((platform) => platform.draw());
-  //   platform.draw(); // drawing platform onto canvas
-  player.update(); // player.draw() below platform.draw() so that on live server, player wont be behing platform when they overlap
+  platforms.forEach((platform) => platform.draw()); //   platform.draw(); // drawing platform onto canvas
   enemies.forEach((enemy) => enemy.draw());
+  home.draw();
+  player.update(); // includes player.draw() below platform.draw() so that on live server, player wont be behing platform when they overlap
 
   platforms.forEach((platform) => {
     if (
@@ -161,9 +182,6 @@ function animate() {
     ) {
       alert("Game Over! You are dead");
     }
-
-
-
   });
 }
 
@@ -182,12 +200,12 @@ function keyboardDown({ keyCode }) {
       console.log("left");
       if (player.position.x >= 100) {
         player.velocity.x = -7;
-        scrollDistance -= 7;
+        scrollDistance -= 10;
       } else {
         player.velocity.x = 0;
+        scrollDistance -= 10;
         platforms.forEach((platform) => {
           platform.position.x += 7;
-          scrollDistance = -7;
           // moving the platform RIGHT instead of the player by 5 when you keep moving left
           // this is to scroll the platform to the left
         });
@@ -195,6 +213,7 @@ function keyboardDown({ keyCode }) {
           enemy.position.x += 7;
           // scrolls enemy to the right
         });
+        home.position.x += 7;
       }
       break;
     case 83: // refers to S
@@ -202,14 +221,15 @@ function keyboardDown({ keyCode }) {
       break;
     case 68: // refers to D
       console.log("right");
-      if (player.position.x <= 1000) {   // CHANGE THIS ACCORDING TO SCREEN SIZE !!!!!!!
+      if (player.position.x <= 900) {
+        // CHANGE THIS ACCORDING TO SCREEN SIZE !!!!!!! default 400
         player.velocity.x = 7;
-        scrollDistance += 7;
+        scrollDistance += 10;
       } else {
         player.velocity.x = 0;
+        scrollDistance += 10;
         platforms.forEach((platform) => {
           platform.position.x -= 7;
-          scrollDistance += 7;
           // 5 because you want it to move LEFT at the same rate as the player.velocity.x
           // scrolls platform to the right
         });
@@ -217,6 +237,7 @@ function keyboardDown({ keyCode }) {
           enemy.position.x -= 7;
           // scrolls enemy to the right
         });
+        home.position.x -= 7;
       }
       break;
     case 87: // refers to W
@@ -226,7 +247,7 @@ function keyboardDown({ keyCode }) {
   }
 
   // Winning Scenario
-  if (scrollDistance >= home) {
+  if (scrollDistance >= homeDistance) {
     alert("Congrats! The Cat has returned home!");
   }
   console.log(scrollDistance);
