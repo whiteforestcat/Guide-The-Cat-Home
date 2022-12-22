@@ -12,11 +12,7 @@ search how to make screen move
 5. platforms
 6. scroll the background
 7. win scenario
-8. image platforms
-9. parallax scroll
-10. death pits
-11. level creation
-12. fine-tuning
+8. update images
 
 <link href="style.css" rel="stylesheet" />
 <script src="script.js" charset="utf-8"></script>
