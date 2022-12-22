@@ -4,6 +4,7 @@ const platformImage = document.getElementById("platform-image");
 const catImage = document.getElementById("cat-image");
 const wolfImage = document.getElementById("wolf-image");
 const homeImage = document.getElementById("home-image");
+const eagleImage = document.getElementById("eagle-image");
 
 const canvas = document.querySelector("canvas");
 
@@ -88,7 +89,7 @@ class Platform {
   }
 }
 
-class Enemy {
+class Enemy { // ground enemies
   constructor(x) {
     this.position = {
       x: x,
@@ -106,6 +107,41 @@ class Enemy {
       this.width,
       this.height
     );
+  }
+}
+
+class Flying {  // flying enemies
+  constructor(x) {
+    // creating properties for Player class
+    this.position = {
+      // xy position on canvas with 0,0 being at top left corner
+      x: x, // 2500
+      y: 250,
+    };
+    this.width = 100;
+    this.height = 116;
+    this.velocity = {
+      x: 7,
+    };
+  }
+
+  draw() {
+    // c.fillStyle = "yellow"; // making player red
+    // c.fillRect(this.position.x, this.position.y, this.width, this.height); // creates rectangle, requires xy coordinates for positioning on the canvas, width and height
+    c.drawImage(
+      eagleImage,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
+  }
+
+  update() {
+    // to continuously update the player's properties and values
+    this.draw(); // draw the player onto canvas
+    // VERY IMPORTANT: the 2 lines below link position with velocity causing position to be affected by velocity
+    this.position.x -= this.velocity.x;
   }
 }
 
@@ -150,12 +186,25 @@ const enemies = [new Enemy(500), new Enemy(1100), new Enemy(1800)];
 // creating house
 const home = new Home(2500); // 3000
 
+// create flying enemies
+const flyings = [
+  new Flying(2500),
+  new Flying(5000),
+  new Flying(7500),
+  new Flying(10000),
+  new Flying(12500),
+  new Flying(15000),
+  new Flying(17500),
+  new Flying(20000),
+];
+
 function animate() {
   requestAnimationFrame(animate); // arguement is the function which you want to repeat, here want to repeat the animate function
   // meaning the animiate function will repeat its contents over and over again
   c.clearRect(0, 0, canvas.width, canvas.height); // to remove all the drawings in the canvas, requires starting reference point coordinates and from there how much width and height you want to remove
   platforms.forEach((platform) => platform.draw()); //   platform.draw(); // drawing platform onto canvas
   enemies.forEach((enemy) => enemy.draw());
+  flyings.forEach((flying) => flying.update());
   home.draw();
   player.update(); // includes player.draw() below platform.draw() so that on live server, player wont be behing platform when they overlap
 
@@ -179,6 +228,18 @@ function animate() {
       player.position.y + player.height - 50 >= enemy.position.y && // somehow need -10 to ensure player is in contact with enemy from the top
       player.position.x + player.width - 100 >= enemy.position.x && // ninja cat minus 4
       player.position.x + 50 <= enemy.position.x + enemy.width
+    ) {
+      alert("Game Over! You are dead");
+    }
+  });
+
+  flyings.forEach((flying) => {
+    if (
+      // creating player-enemy collision detection
+      player.position.y + player.height >= flying.position.y && // somehow need -10 to ensure player is in contact with enemy from the top
+      player.position.y <= flying.position.y + flying.height &&
+      player.position.x + player.width >= flying.position.x && // ninja cat minus 4
+      player.position.x <= flying.position.x + flying.width
     ) {
       alert("Game Over! You are dead");
     }

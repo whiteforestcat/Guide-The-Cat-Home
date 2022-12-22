@@ -34,3 +34,4 @@ add second invisible player hidden in the background (initialised at bottom righ
 - meaning separate the scrolling from the player movement into 2 different players
 
 readup on setTimeout() and setInterval() functions -- IMPORTANT
+include ReadME file 
